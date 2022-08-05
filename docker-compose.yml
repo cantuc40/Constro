@@ -1,0 +1,37 @@
+version: '3,9'
+services:
+  login_auth:
+    image: login_authentication
+    build: ./src/loginAuth/
+    ports:
+      - "1138:1138"
+    networks:
+      - constro
+    depends_on:
+      - mongo
+  frontend:
+    image: swat-client
+    build: ./src/frontend/
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    networks:
+      - constro
+    volumes:
+      - ./client/:/usr/src/app
+  
+  mongo:
+    image: mongo:4.2-bionic
+    ports:
+      - "8000:8000"
+    networks:
+      - constro
+    volumes:
+      - mongo-data:/data/db
+
+networks:
+  constro:
+    driver: bridge
+volumes:
+  mongo-data:
+    driver: local
